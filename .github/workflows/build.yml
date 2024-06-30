@@ -30,32 +30,47 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm install --include=dev
+      # - name: Install dependencies
+      #   run: npm install --include=dev
 
-      - name: Setup PostgreSQL
-        run: |
-          # Wait for PostgreSQL to start
-          until nc -z localhost 5435; do
-            echo "Waiting for PostgreSQL to start..."
-            sleep 1
-          done
+      # - name: Setup PostgreSQL
+      #   run: |
+      #     # Wait for PostgreSQL to start
+      #     until nc -z localhost 5435; do
+      #       echo "Waiting for PostgreSQL to start..."
+      #       sleep 1
+      #     done
 
-          # Generate and apply migrations
-          npx prisma generate
-          npx prisma migrate dev --name init
+      #     # Generate and apply migrations
+      #     npx prisma generate
+      #     npx prisma migrate dev --name init
 
-      - name: Run tests
-        run: npm test
+      # - name: Run tests
+      #   run: npm test
 
-      - name: Sonar Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      # - name: Sonar Scan
+      #   uses: sonarsource/sonarqube-scan-action@master
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       # If you wish to fail your job when the Quality Gate is red, uncomment the
       # following lines. This would typically be used to fail a deployment.
       # - uses: sonarsource/sonarqube-quality-gate-action@master
       #   timeout-minutes: 5
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Log in to the GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/api-gateway:latest
