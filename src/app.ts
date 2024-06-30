@@ -2,6 +2,7 @@ import express from "express";
 import * as dotevnv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
+import authRouter from "./routes/auth.routes";
 import customerRouter from "./routes/customer.routes";
 import orderRouter from "./routes/order.routes";
 import productRouter from "./routes/product.routes";
@@ -24,9 +25,7 @@ app.use(helmet());
 
 app.use(errorHandler);
 
-app.use("/", customerRouter);
-app.use("/", orderRouter);
-app.use("/", productRouter);
+app.use("/", authRouter, customerRouter, orderRouter, productRouter);
 
 app.use((req, res) => {
   res.status(404).send({ message: "Bad request" });
