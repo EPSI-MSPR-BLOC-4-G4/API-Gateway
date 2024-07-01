@@ -9,8 +9,9 @@ jobs:
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
-    env: 
+    env:
       DATABASE_URL: "postgresql://postgres:123@localhost:5435/epsi_authentication?schema=public"
+      PORT: 10000
     services:
       postgres:
         image: postgres:latest
@@ -30,35 +31,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Install dependencies
-      #   run: npm install --include=dev
+      - name: Install dependencies
+        run: npm install --include=dev
 
-      # - name: Setup PostgreSQL
-      #   run: |
-      #     # Wait for PostgreSQL to start
-      #     until nc -z localhost 5435; do
-      #       echo "Waiting for PostgreSQL to start..."
-      #       sleep 1
-      #     done
+      - name: Setup PostgreSQL
+        run: |
+          # Wait for PostgreSQL to start
+          until nc -z localhost 5433; do
+            echo "Waiting for PostgreSQL to start..."
+            sleep 1
+          done
 
-      #     # Generate and apply migrations
-      #     npx prisma generate
-      #     npx prisma migrate dev --name init
+      - name: Generate Prisma Client
+        run: npx prisma generate
 
-      # - name: Run tests
-      #   run: npm test
+      - name: Apply Prisma Migrations
+        run: npx prisma migrate dev --name init
 
-      # - name: Sonar Scan
-      #   uses: sonarsource/sonarqube-scan-action@master
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Run tests
+        run: npm test
+
+      - name: Sonar Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Log in to the GitHub Container Registry
         uses: docker/login-action@v3
