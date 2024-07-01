@@ -22,6 +22,8 @@
   "homepage": "https://github.com/EPSI-MSPR-BLOC-4-G4/API-Gateway#readme",
   "dependencies": {
     "@prisma/client": "^5.16.1",
+    "@sentry/node": "^8.13.0",
+    "@sentry/profiling-node": "^8.13.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
