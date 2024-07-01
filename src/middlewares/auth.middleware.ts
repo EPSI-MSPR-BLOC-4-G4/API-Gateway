@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt.utils";
 
 interface AuthRequest extends Request {
-  user?: string;
+  username?: string;
 }
 
 const authMiddleware = (
@@ -19,7 +19,7 @@ const authMiddleware = (
 
   try {
     const payload = verifyToken(token);
-    req.user = payload.username;
+    req.username = payload.username;
     next();
   } catch (err) {
     res.status(401).json({ message: "Invalid token" });

@@ -54,4 +54,4 @@ const handleRequest = async (promise: Promise<any>, res: Response) => {
   }
 };
 
-export { get, post, put, del, handleRequest };
+export { fetchWrapper, get, post, put, del, handleRequest };
