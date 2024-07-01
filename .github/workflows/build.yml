@@ -37,7 +37,7 @@ jobs:
       - name: Setup PostgreSQL
         run: |
           # Wait for PostgreSQL to start
-          until nc -z localhost 5433; do
+          until nc -z localhost 5435; do
             echo "Waiting for PostgreSQL to start..."
             sleep 1
           done
