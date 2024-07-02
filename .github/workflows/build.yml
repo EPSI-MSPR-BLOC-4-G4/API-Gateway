@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: "postgresql://postgres:123@localhost:5435/epsi_authentication?schema=public"
+      CUSTOMER_API_URI: "http://localhost:7000/"
+      ORDER_API_URI: "http://localhost:8000/"
+      PRODUCT_API_URI: "http://localhost:9000/"
       PORT: 10000
     services:
       postgres:
