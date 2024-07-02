@@ -5,7 +5,6 @@ import * as dotevnv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import routes from "./routes";
-import { errorHandler } from "./middlewares/errorHandler";
 
 dotevnv.config();
 
