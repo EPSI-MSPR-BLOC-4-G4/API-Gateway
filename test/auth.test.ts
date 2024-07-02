@@ -2,6 +2,9 @@ import request from "supertest";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import app from "../src/app";
+import * as dotevnv from "dotenv";
+
+dotevnv.config();
 
 const prisma = new PrismaClient();
 
@@ -19,7 +22,11 @@ describe("Auth API", () => {
     it("should register a new user", async () => {
       const response = await request(app)
         .post("/api/auth/register")
-        .send({ username: "newuser", password: "password" })
+        .send({
+          username: "newuser",
+          password: "password",
+          registerSecret: process.env.REGISTER_SECRET,
+        })
         .set("Content-Type", "application/json");
 
       expect(response.status).toBe(201);
@@ -36,7 +43,11 @@ describe("Auth API", () => {
 
       const response = await request(app)
         .post("/api/auth/register")
-        .send({ username: "existinguser", password: "password" })
+        .send({
+          username: "existinguser",
+          password: "password",
+          registerSecret: process.env.REGISTER_SECRET,
+        })
         .set("Content-Type", "application/json");
 
       expect(response.status).toBe(400);
@@ -45,6 +56,23 @@ describe("Auth API", () => {
         "Username already exists"
       );
     });
+  });
+
+  it("should not register a user with an invalid register secret", async () => {
+    const response = await request(app)
+      .post("/api/auth/register")
+      .send({
+        username: "anotheruser",
+        password: "password",
+        registerSecret: "invalid_secret",
+      })
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(403);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Forbidden: Invalid register secret"
+    );
   });
 
   describe("POST /api/auth/login", () => {

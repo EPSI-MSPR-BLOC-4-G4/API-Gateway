@@ -14,6 +14,7 @@ jobs:
       CUSTOMER_API_URI: "http://localhost:7000/"
       ORDER_API_URI: "http://localhost:8000/"
       PRODUCT_API_URI: "http://localhost:9000/"
+      REGISTER_SECRET: "secret"
       PORT: 10000
     services:
       postgres:
