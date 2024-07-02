@@ -1,5 +1,5 @@
 import { RequestHandler, Router } from "express";
-import { createProxyMiddleware } from "http-proxy-middleware";
+import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import * as dotevnv from "dotenv";
 
 dotevnv.config();
@@ -16,11 +16,17 @@ const proxyTargets: Record<string, string> = {
 // Boucle pour configurer les proxys
 Object.keys(proxyTargets).forEach((context) => {
   const target = proxyTargets[context];
+  if (!target) {
+    throw new Error(`Missing target for context: ${context}`);
+  }
   const proxy: RequestHandler = createProxyMiddleware({
     target,
     changeOrigin: true,
     pathRewrite: {
       [`^${context}`]: context,
+    },
+    on: {
+      proxyReq: fixRequestBody,
     },
   });
   router.use(context, proxy);
