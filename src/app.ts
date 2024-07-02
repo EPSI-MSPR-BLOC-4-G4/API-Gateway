@@ -4,10 +4,7 @@ import express from "express";
 import * as dotevnv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import authRouter from "./routes/auth.routes";
-import customerRouter from "./routes/customer.routes";
-import orderRouter from "./routes/order.routes";
-import productRouter from "./routes/product.routes";
+import routes from "./routes";
 import { errorHandler } from "./middlewares/errorHandler";
 
 dotevnv.config();
@@ -43,7 +40,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
 
-app.use("/", authRouter, customerRouter, orderRouter, productRouter);
+app.use("/", routes);
 
 app.use((req, res) => {
   res.status(404).send({ message: "Bad request" });
