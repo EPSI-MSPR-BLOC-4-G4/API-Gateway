@@ -2,17 +2,27 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { generateToken } from "../utils/jwt.utils";
+import * as dotevnv from "dotenv";
+
+dotevnv.config();
 
 const prisma = new PrismaClient();
 
 type Credentials = {
   username: string;
   password: string;
+  registerSecret?: string;
 };
 
 const register = async (req: Request, res: Response) => {
-  console.log("register");
-  const { username, password }: Credentials = req.body;
+  const { username, password, registerSecret }: Credentials = req.body;
+
+  // Vérifiez le secret d'inscription
+  if (registerSecret !== process.env.REGISTER_SECRET) {
+    return res
+      .status(403)
+      .json({ message: "Forbidden: Invalid register secret" });
+  }
 
   try {
     // Vérifiez si l'utilisateur existe déjà
