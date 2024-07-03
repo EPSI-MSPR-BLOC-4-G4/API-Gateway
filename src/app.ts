@@ -2,7 +2,6 @@ import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 import express from "express";
 import * as dotevnv from "dotenv";
-import cors from "cors";
 import helmet from "helmet";
 import routes from "./routes";
 
@@ -16,9 +15,7 @@ const PORT = parseInt(process.env.PORT as string, 10);
 
 Sentry.init({
   dsn: "https://6e275a4fb52b9ca6e44220b4c39dc16b@o4507378463080448.ingest.de.sentry.io/4507529028042832",
-  integrations: [
-    nodeProfilingIntegration(),
-  ],
+  integrations: [nodeProfilingIntegration()],
   // Performance Monitoring
   tracesSampleRate: 1.0, //  Capture 100% of the transactions
 
@@ -30,7 +27,6 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use(helmet());
 
 Sentry.setupExpressErrorHandler(app);
