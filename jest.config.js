@@ -1,14 +1,16 @@
 // Jest configuration file
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['@babel/register'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  preset: "ts-jest",
+  testEnvironment: "node",
+  setupFilesAfterEnv: ["@babel/register"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   transform: {
-      '^.+\\.tsx?$': 'ts-jest',
+    "^.+\\.tsx?$": "ts-jest",
   },
-  testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
+  testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
   transformIgnorePatterns: [
-      '/node_modules/',
+    "/node_modules/",
+    "jest.config.js",
+    "jest.setup.js",
   ],
 };
