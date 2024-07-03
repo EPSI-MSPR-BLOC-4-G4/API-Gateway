@@ -72,14 +72,6 @@ jobs:
           REGISTER_SECRET: ${{ env.REGISTER_SECRET }}
           JWT_EXPIRES_IN: ${{ env.JWT_EXPIRES_IN }}
           PORT: ${{ env.PORT }}
-
-      # - name: Wait for API to be ready
-      #   run: |
-      #     # Wait for the API to be ready
-      #     until curl -sSf http://localhost:10000/api/auth/login; do
-      #       echo "Waiting for API to start..."
-      #       sleep 5
-      #     done
           
       - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.12.0
