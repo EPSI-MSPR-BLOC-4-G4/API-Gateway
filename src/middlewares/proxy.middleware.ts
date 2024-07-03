@@ -14,11 +14,16 @@ const proxyTargets: Record<string, string> = {
   "/api/products": process.env.PRODUCT_API_URI!,
 };
 
-// Boucle pour configurer les proxys
-Object.keys(proxyTargets).forEach((context) => {
+// Fonction pour configurer un proxy pour un contexte donné
+export const configureProxy = (context: string): void => {
   const target = proxyTargets[context];
   if (!target) {
-    throw new Error(`Missing target for context: ${context}`);
+    router.use(context, (req, res) => {
+      res
+        .status(404)
+        .send({ message: "Not found target of context : " + context });
+    });
+    return;
   }
   const proxy: RequestHandler = createProxyMiddleware({
     target,
@@ -31,6 +36,11 @@ Object.keys(proxyTargets).forEach((context) => {
     },
   });
   router.use(context, authMiddleware, proxy);
+};
+
+// Boucle pour configurer les proxys
+Object.keys(proxyTargets).forEach((context) => {
+  configureProxy(context);
 });
 
 export default router;

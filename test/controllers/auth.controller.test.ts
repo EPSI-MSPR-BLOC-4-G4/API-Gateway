@@ -73,6 +73,28 @@ describe("Auth Controller", () => {
         "Forbidden: Invalid register secret"
       );
     });
+
+    it("should return an error when registering a user fails", async () => {
+      const mockHash = jest.spyOn(bcrypt, "hash").mockImplementation(() => {
+        throw new Error("Hashing error");
+      });
+
+      const registerSecret = process.env.REGISTER_SECRET;
+      const credentials = {
+        username: "testuser",
+        password: "testpassword",
+        registerSecret,
+      };
+
+      const response = await request(app)
+        .post("/api/auth/register") // Make sure to use the correct route path
+        .send(credentials)
+        .expect(500);
+
+      expect(response.body).toHaveProperty("message", "Error registering user");
+
+      mockHash.mockRestore();
+    });
   });
 
   describe("POST /api/auth/login", () => {
@@ -124,6 +146,27 @@ describe("Auth Controller", () => {
         "message",
         "Invalid username or password"
       );
+    });
+
+    it("should return an error when logging in fails", async () => {
+      const mockCompare = jest
+        .spyOn(bcrypt, "compare")
+        .mockImplementation(() => {
+          throw new Error("Comparing error");
+        });
+      const credentials = {
+        username: "testuser",
+        password: "testpassword",
+      };
+
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send(credentials)
+        .expect(500);
+
+      expect(response.body).toHaveProperty("message", "Error logging in");
+
+      mockCompare.mockRestore();
     });
   });
 });

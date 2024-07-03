@@ -7,9 +7,13 @@ import routes from "./routes";
 
 dotevnv.config();
 
-if (!process.env.PORT) {
-  console.log(`No port value specified...`);
-}
+export const checkPort = () => {
+  if (!process.env.PORT) {
+    throw new Error("No port value specified...");
+  }
+};
+
+checkPort();
 
 const PORT = parseInt(process.env.PORT as string, 10);
 
@@ -30,10 +34,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
 Sentry.setupExpressErrorHandler(app);
-
-app.get("/debug-sentry", function mainHandler(req, res) {
-  throw new Error("My first Sentry error!");
-});
 
 app.use("/", routes);
 
