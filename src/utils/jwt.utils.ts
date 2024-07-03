@@ -1,4 +1,7 @@
 import jwt from "jsonwebtoken";
+import * as dotevnv from "dotenv";
+
+dotevnv.config();
 
 type Payload = {
   username: string;
@@ -7,10 +10,11 @@ type Payload = {
 type DecodedPayload = Payload & jwt.JwtPayload;
 
 const secret = process.env.JWT_SECRET || "test_secret";
+const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
 
 const generateToken = (username: string): string => {
   const payload: Payload = { username };
-  const options: jwt.SignOptions = { expiresIn: "30d" };
+  const options: jwt.SignOptions = { expiresIn: expiresIn };
   return jwt.sign(payload, secret, options);
 };
 

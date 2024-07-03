@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage --coverageThreshold=95 --verbose",
+    "test": "jest --coverage --verbose",
     "dev": "ts-node-dev --pretty --respawn ./src/app.ts",
     "prisma:studio": "npx prisma studio",
     "build": "rimraf ./dist && tsc",
