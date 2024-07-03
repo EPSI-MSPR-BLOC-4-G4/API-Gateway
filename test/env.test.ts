@@ -1,4 +1,5 @@
 import { Server } from "http";
+import { checkPort } from "../src/app";
 
 describe("App Environment Variables", () => {
   let originalEnv: NodeJS.ProcessEnv;
@@ -23,15 +24,16 @@ describe("App Environment Variables", () => {
     jest.resetModules(); // Reset modules to clean up any module-level state
   });
 
-  it("should not log a message if PORT is specified", () => {
-    process.env.PORT = "3000";
+  it("should throw an error if PORT is not specified", () => {
+    const originalPort = process.env.PORT;
+    delete process.env.PORT;
 
-    // Use jest.isolateModules to load the app module in isolation
-    jest.isolateModules(() => {
-      require("../src/app"); // Re-import the app to apply the new environment variables
-    });
+    expect(() => {
+      checkPort();
+    }).toThrow("No port value specified...");
 
-    expect(logSpy).not.toHaveBeenCalledWith("No port value specified...");
+    // Restore the original PORT value
+    process.env.PORT = originalPort;
   });
 
   it("should start the server if NODE_ENV is not test", () => {

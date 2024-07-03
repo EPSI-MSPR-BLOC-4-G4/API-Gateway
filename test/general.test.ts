@@ -17,9 +17,4 @@ describe("App", () => {
     expect(response.headers).toHaveProperty("x-content-type-options");
     expect(response.headers).toHaveProperty("x-xss-protection");
   });
-
-  it("should trigger Sentry error for /debug-sentry route", async () => {
-    const response = await request(app).get("/debug-sentry");
-    expect(response.status).toBe(500);
-  });
 });

@@ -44,7 +44,10 @@ const register = async (req: Request, res: Response) => {
     const token = generateToken(newUser.username);
     res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ message: "Error registering user", error });
+    res.status(500).json({
+      message: "Error registering user",
+      error: JSON.stringify(error),
+    });
   }
 };
 
