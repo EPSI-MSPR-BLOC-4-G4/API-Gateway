@@ -8,9 +8,5 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest",
   },
   testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
-  transformIgnorePatterns: [
-    "/node_modules/",
-    "jest.config.js",
-    "jest.setup.js",
-  ],
+  transformIgnorePatterns: ["/node_modules/"],
 };
