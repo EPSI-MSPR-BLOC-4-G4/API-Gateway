@@ -15,6 +15,7 @@ jobs:
       ORDER_API_URI: "http://localhost:8000/"
       PRODUCT_API_URI: "http://localhost:9000/"
       REGISTER_SECRET: "secret"
+      JWT_EXPIRES_IN: "5m"
       PORT: 10000
     services:
       postgres:

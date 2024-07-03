@@ -1,6 +1,7 @@
 import { RequestHandler, Router } from "express";
 import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import * as dotevnv from "dotenv";
+import authMiddleware from "./auth.middleware";
 
 dotevnv.config();
 
@@ -29,7 +30,7 @@ Object.keys(proxyTargets).forEach((context) => {
       proxyReq: fixRequestBody,
     },
   });
-  router.use(context, proxy);
+  router.use(context, authMiddleware, proxy);
 });
 
 export default router;
